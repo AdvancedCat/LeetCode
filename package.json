@@ -3,7 +3,8 @@
     "version": "1.0.0",
     "description": "The coding for LeetCode",
     "scripts": {
-        "test": "jest"
+        "test": "jest",
+        "test:watch": "jest --watch"
     },
     "author": "",
     "license": "MIT",
