@@ -44,6 +44,18 @@ export class LinkList {
 
         return this
     }
+
+    print(seperator = '') {
+        let arr = []
+        for (let i = 0; i < this.length; i++) {
+            arr.push(this.cur.value)
+            this.next()
+        }
+
+        this.reset()
+
+        return arr.join(seperator)
+    }
 }
 
 LinkList.from = function(arr = []) {
