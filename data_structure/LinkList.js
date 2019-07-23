@@ -12,7 +12,7 @@ export class LinkList {
         }
 
         this.cur = this.cur.next
-        return this.cur
+        return this
     }
 
     add(item) {
@@ -28,15 +28,21 @@ export class LinkList {
         }
 
         this.length++
+
+        return this
     }
 
     reset() {
         this.cur = this.head
+
+        return this
     }
 
     clear() {
         this.head = this.cur = this.tail = null
         this.length = 0
+
+        return this
     }
 }
 

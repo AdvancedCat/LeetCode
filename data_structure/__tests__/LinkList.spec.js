@@ -9,7 +9,7 @@ describe(chalk.magenta.bold('DataStructure - LinkList'), () => {
         expect(linkList.head.value).toBe(1)
         expect(linkList.tail.value).toBe(4)
         expect(linkList.cur.value).toBe(1)
-        expect(linkList.next().value).toBe(2)
+        expect(linkList.next().cur.value).toBe(2)
         linkList.reset()
         expect(linkList.cur.value).toBe(1)
         expect(linkList.length).toBe(4)
