@@ -21,4 +21,24 @@ describe('two sum', () => {
         expect(list.length).toBe(3)
         expect(list.print()).toBe('854')
     })
+
+    it('case 3', () => {
+        let l1 = LinkList.from([7, 5])
+        let l2 = LinkList.from([1, 5])
+
+        let list = addTwoNumbers(l1, l2)
+
+        expect(list.length).toBe(3)
+        expect(list.print()).toBe('801')
+    })
+
+    it('case 4', () => {
+        let l1 = LinkList.from([9, 5])
+        let l2 = LinkList.from([1, 5])
+
+        let list = addTwoNumbers(l1, l2)
+
+        expect(list.length).toBe(3)
+        expect(list.print()).toBe('011')
+    })
 })

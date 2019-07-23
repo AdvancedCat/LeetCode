@@ -35,5 +35,9 @@ export function addTwoNumbers(l1, l2) {
         longList.next()
     }
 
+    if (reminder > 0) {
+        list.add(reminder)
+    }
+
     return list
 }
