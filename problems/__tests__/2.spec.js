@@ -1,7 +1,7 @@
 import { addTwoNumbers } from '../2.add-two-numbers'
 import { LinkList } from '../../data_structure/LinkList'
 
-describe('two sum', () => {
+describe('2.add-two-numbers', () => {
     it('case 1', () => {
         let l1 = LinkList.from([2, 4, 3])
         let l2 = LinkList.from([5, 6, 4])

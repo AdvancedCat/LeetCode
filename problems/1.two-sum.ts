@@ -3,7 +3,7 @@
  * @param {number} target
  * @return {number[]}
  */
-function twoSum(nums, target) {
+function twoSum(nums: number[], target: number): number[] {
     const dic = {}
 
     nums.forEach((num, idx) => {

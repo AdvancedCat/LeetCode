@@ -1,4 +1,9 @@
 export class LinkList {
+    head: Node | null
+    cur: Node | null
+    tail: Node | null
+    length: number
+
     constructor() {
         this.head = null
         this.cur = null
@@ -7,7 +12,7 @@ export class LinkList {
     }
 
     next() {
-        if (this.head === null || this.cur.next === null) {
+        if (this.head === null || this.cur === null || this.cur.next === null) {
             return null
         }
 
@@ -15,18 +20,17 @@ export class LinkList {
         return this
     }
 
-    add(item) {
+    add(item: any) {
         let node = new Node(item)
 
-        if (this.length === 0) {
+        if (this.tail) {
+            this.tail.next = node
+            this.tail = node
+        } else {
             this.head = node
             this.cur = node
             this.tail = node
-        } else {
-            this.tail.next = node
-            this.tail = node
         }
-
         this.length++
 
         return this
@@ -46,7 +50,8 @@ export class LinkList {
     }
 
     print(seperator = '') {
-        let arr = []
+        let arr: any[] = []
+
         for (let i = 0; i < this.length; i++) {
             arr.push(this.cur.value)
             this.next()
@@ -56,20 +61,23 @@ export class LinkList {
 
         return arr.join(seperator)
     }
-}
 
-LinkList.from = function(arr = []) {
-    let linkList = new LinkList()
+    static from(arr: any[]) {
+        let linkList = new LinkList()
 
-    arr.forEach(item => {
-        linkList.add(item)
-    })
+        arr.forEach(item => {
+            linkList.add(item)
+        })
 
-    return linkList
+        return linkList
+    }
 }
 
 export class Node {
-    constructor(item) {
+    value: any
+    next: Node | null
+
+    constructor(item: any) {
         this.value = item
         this.next = null
     }

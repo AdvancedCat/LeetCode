@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "outDir": "./ts-dist/",
+        "sourceMap": true,
+        "allowJs": true,
+        "noImplicitAny": false,
+        "strictNullChecks": false,
+        "moduleResolution": "node",
+        "module": "commonjs",
+        "target": "es5"
+    },
+    "include": ["./problems/**/*"],
+    "exclude": ["node_modules"]
+}
