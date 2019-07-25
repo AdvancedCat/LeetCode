@@ -1,6 +1,11 @@
+/**
+ * 思路1： 暴力拆解法
+ *
+ * 算法复杂度： O(m * n)
+ * 空间复杂度： O(n)
+ * m为字符串长度 n为words数组长度
+ */
 export function findSubstring(source: string, words: string[]): number[] {
-    console.log(source, words)
-
     if (!source || words.length === 0) return []
 
     let len = words.length
@@ -18,33 +23,45 @@ export function findSubstring(source: string, words: string[]): number[] {
     }
 
     let flags = Array(len).fill(0)
-    console.log(flags)
     let bingos = 0,
         bingoIndex = 0
     for (let i = 0; i < groups.length; i++) {
         let item = groups[i]
-        let index = words.indexOf(item)
+        let index = -1
+
+        for (let i = 0; i < len; i++) {
+            if (words[i] === item && flags[i] === 0) {
+                index = i
+                break
+            }
+        }
 
         if (index < 0) {
             bingoIndex = (i + 1) * wordLen
-            flags = Array(len).fill(0)
-            bingos = 0
+            reset()
         } else if (flags[index] === 1) {
             bingoIndex = i * wordLen
-            flags = Array(len).fill(0)
-            bingos = 0
+            reset()
             i--
         } else {
             flags[index] = 1
             bingos++
-            if (bingos === wordLen) {
+            if (bingos === len) {
                 result.push(bingoIndex)
                 bingoIndex = (i + 1) * wordLen
-                flags = Array(len).fill(0)
-                bingos = 0
+                reset()
             }
         }
     }
 
+    function reset() {
+        flags = Array(len).fill(0)
+        bingos = 0
+    }
+
     return result
 }
+
+/**
+ * 滑动窗口法
+ */
