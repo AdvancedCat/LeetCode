@@ -4,6 +4,7 @@
     "description": "The coding for LeetCode",
     "scripts": {
         "eslint": "eslint src --ext .js,.ts --cache",
+        "prettier": "prettier '*/.ts' --write  ",
         "test": "jest",
         "test:watch": "jest --watch"
     },

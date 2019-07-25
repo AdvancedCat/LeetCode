@@ -1,9 +1,10 @@
 {
     "compilerOptions": {
-        "outDir": "./ts-dist/",
+        "outDir": "./dist/",
         "sourceMap": true,
         "allowJs": true,
         "noImplicitAny": false,
+        "noImplicitThis": true,
         "strictNullChecks": false,
         "moduleResolution": "node",
         "module": "commonjs",

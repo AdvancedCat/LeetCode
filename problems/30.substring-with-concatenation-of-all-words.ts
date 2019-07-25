@@ -64,4 +64,5 @@ export function findSubstring(source: string, words: string[]): number[] {
 
 /**
  * 滑动窗口法
+ * 运用HashMap
  */
