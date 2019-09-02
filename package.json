@@ -6,7 +6,9 @@
         "eslint": "eslint src --ext .js,.ts --cache",
         "prettier": "prettier '*/.ts' --write  ",
         "test": "jest",
-        "test:watch": "jest --watch"
+        "test:watch": "jest --watch",
+        "test:promise": "promises-aplus-tests practices/MyPromise",
+        "test:promise2": "promises-aplus-tests practices/WebPromise"
     },
     "author": "",
     "license": "MIT",
@@ -31,6 +33,7 @@
         "jest": "^24.8.0",
         "prettier": "^1.18.2",
         "pretty-quick": "^1.11.1",
+        "promises-aplus-tests": "^2.1.2",
         "ts-jest": "^24.0.2",
         "typescript": "^3.5.3"
     },
