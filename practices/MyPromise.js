@@ -5,8 +5,8 @@ const REJECTED = 'rejected'
 function Q(executor) {
     let self = this
     self.status = PENDING
-    self.final = void 0 // Promise的终值
-    self.reason = void 0 // 拒绝的理由
+    self.final = void 0 // Promise完成的终值
+    self.reason = void 0 // Promise拒绝的理由
     self.onResolvedListeners = []
     self.onRejectedListeners = []
 
@@ -21,7 +21,7 @@ function Q(executor) {
             if (self.status === PENDING) {
                 self.status = RESOLVED
                 self.final = value
-                // 遍历onResolvedListeners
+
                 self.onResolvedListeners.forEach(listener => {
                     listener(self.final)
                 })
@@ -34,7 +34,7 @@ function Q(executor) {
             if (self.status === PENDING) {
                 self.status = REJECTED
                 self.reason = reason
-                // 遍历onRejectedListeners
+
                 self.onRejectedListeners.forEach(listener => {
                     listener(self.reason)
                 })
@@ -162,8 +162,25 @@ function resolvePromise(promise, x, resolve, reject) {
 Q.prototype.catch = function(reject) {
     return this.then(null, reject)
 }
-Q.prototype.all = function(promises = []) {}
-Q.prototype.race = function(promises = []) {}
+Q.prototype.all = function(promises = []) {
+    if (!promises.length) return Q.resolve([])
+    return new Q((resolve, reject) => {
+        let done = doneAllPromises(promises.length, resolve)
+        promises.forEach((promise, idx) => {
+            promise.then(value => {
+                done(idx, value)
+            }, reject)
+        })
+    })
+}
+Q.prototype.race = function(promises = []) {
+    if (!promises.length) return Q.resolve()
+    return new Q((resolve, reject) => {
+        promises.forEach(promise => {
+            promise.then(resolve, reject)
+        })
+    })
+}
 
 Q.resolve = function(value) {
     return new Q(resolve => {
@@ -176,16 +193,29 @@ Q.reject = function(reason) {
     })
 }
 
-Q.isPromise = function(maybePromise) {
-    return maybePromise instanceof Q
+Q.isPromise = function(maybeQ) {
+    return maybeQ instanceof Q
 }
 
 function isFunction(v) {
     return typeof v === 'function'
 }
-
+// 不能是isPlainObject，因为Promise从obj.then如果出错，会reject
 function isObject(obj) {
     return typeof obj === 'object'
+}
+
+function doneAllPromises(len, resolve) {
+    let count = 0,
+        values = Array(len).fill(undefined)
+
+    return function(index, value) {
+        count++
+        values[index] = value
+        if (count === len) {
+            resolve(values)
+        }
+    }
 }
 
 Q.deferred = Q.defer = function() {
@@ -202,7 +232,6 @@ Q.deferred = Q.defer = function() {
  * npm i -g promises-aplus-tests
  * promises-aplus-tests Promise.js
  */
-
 try {
     module.exports = Q
 } catch (e) {}
