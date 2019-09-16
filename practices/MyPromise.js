@@ -73,9 +73,10 @@ Q.prototype.then = function(onResolved, onRejected) {
     // then里面的FULFILLED/REJECTED状态时 为什么要加setTimeout ?
     // 原因:
     // 其一 2.2.4规范 要确保 onFulfilled 和 onRejected 方法异步执行(且应该在 then 方法被调用的那一轮事件循环之后的新执行栈中执行) 所以要在resolve里加上setTimeout
-    // 其二 2.2.6规范 对于一个promise，它的then方法可以调用多次.（当在其他程序中多次调用同一个promise的then时 由于之前状态已经为FULFILLED/REJECTED状态，则会走的下面逻辑),所以要确保为FULFILLED/REJECTED状态后 也要异步执行onFulfilled/onRejected
-
-    // 其二 2.2.6规范 也是resolve函数里加setTimeout的原因
+    // 其二 2.2.6规范 对于一个promise，它的then方法可以调用多次.
+    //              （当在其他程序中多次调用同一个promise的then时 由于之前状态已经为FULFILLED/REJECTED状态，则会走的下面逻辑),
+    //               所以要确保为FULFILLED/REJECTED状态后 也要异步执行onFulfilled/onRejected
+    //               也是resolve函数里加setTimeout的原因
     // 总之都是 让then方法异步执行 也就是确保onFulfilled/onRejected异步执行
 
     // 如下面这种情景 多次调用p1.then
