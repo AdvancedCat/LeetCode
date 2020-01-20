@@ -5,7 +5,7 @@
  */
 
 const PENDING = 'pending'
-const RESOLVED = 'resolved'
+const RESOLVED = 'fulfilled' // 对齐 ECMA2020 @see: https://github.com/tc39/proposal-promise-allSettled
 const REJECTED = 'rejected'
 
 function Q(executor) {
@@ -89,7 +89,8 @@ Q.prototype.then = function(onResolved, onRejected) {
     //     console.log('当前执行栈中同步代码');
     // })
     // console.log('全局执行栈中同步代码');
-    //
+
+    // 2.2 then方法必须返回一个promise对象
     if (isResolved) {
         return (promise2 = new Q((resolve, reject) => {
             // 实践中要确保 onResolved 和 onRejected 方法异步执行，且应该在 then 方法被调用的那一轮事件循环之后的新执行栈中执行
@@ -195,27 +196,41 @@ function resolvePromise(promise, x, resolve, reject) {
 Q.prototype.catch = function(reject) {
     return this.then(null, reject)
 }
-Q.prototype.all = function(promises = []) {
+/**
+ * promises是Promise实例数组
+ */
+Q.all = function(promises = []) {
+    if (type(promises) !== 'array') throw new TypeError('promises is not array')
     if (!promises.length) return Q.resolve([])
+
     return new Q((resolve, reject) => {
         let done = doneAllPromises(promises.length, resolve)
         promises.forEach((promise, idx) => {
-            promise.then(value => {
+            let xPromise = Q.isPromise(promise) ? promise : Q.resolve(promise)
+            xPromise.then(value => {
                 done(idx, value)
             }, reject)
         })
     })
 }
-Q.prototype.race = function(promises = []) {
+Q.race = function(promises = []) {
     if (!promises.length) return Q.resolve()
+
     return new Q((resolve, reject) => {
         promises.forEach(promise => {
-            promise.then(resolve, reject)
+            let xPromise = Q.isPromise(promise) ? promise : Q.resolve(promise)
+            xPromise.then(resolve, reject)
         })
     })
 }
-
 Q.resolve = function(value) {
+    if (Q.isPromise(value)) return value
+
+    if (isThenable(value))
+        return new Q((resolve, reject) => {
+            return value.then(resolve, reject)
+        })
+
     return new Q(resolve => {
         resolve(value)
     })
@@ -223,6 +238,41 @@ Q.resolve = function(value) {
 Q.reject = function(reason) {
     return new Q((resolve, reject) => {
         reject(reason)
+    })
+}
+Q.any = function(promises = []) {
+    if (type(promises) !== 'array') throw new TypeError('promises is not array')
+    if (!promises.length) return Q.resolve([])
+
+    return new Q((resolve, reject) => {
+        let rejectOnePromise = rejectAllPromise(promises.length)
+        let aggregateErrors = Array(promises.length).fill(void 0)
+        promises.forEach((promise, idx) => {
+            promise.then(resolve, err => {
+                aggregateErrors[idx] = err
+                let hasAllRejects = rejectOnePromise(idx)
+                if (hasAllRejects) reject(aggregateErrors)
+            })
+        })
+    })
+}
+Q.allSettled = function(promises = []) {
+    if (type(promises) !== 'array') throw new TypeError('promises is not array')
+    if (!promises.length) return Q.resolve([])
+
+    return new Q(resolve => {
+        let done = doneAllPromises(promises.length, resolve)
+        promises.forEach((promise, idx) => {
+            let xPromise = Q.isPromise(promise) ? promise : Q.resolve(promise)
+            xPromise.then(
+                value => {
+                    done(idx, value)
+                },
+                err => {
+                    done(idx, err)
+                }
+            )
+        })
     })
 }
 
@@ -235,7 +285,10 @@ function isFunction(v) {
 }
 // 不能是isPlainObject，因为Promise从obj.then如果出错，会reject
 function isObject(obj) {
-    return typeof obj === 'object'
+    return obj !== null && typeof obj === 'object'
+}
+function isThenable(obj) {
+    return isObject(obj) && 'then' in obj && typeof obj.then === 'function'
 }
 
 function doneAllPromises(len, resolve) {
@@ -249,6 +302,23 @@ function doneAllPromises(len, resolve) {
             resolve(values)
         }
     }
+}
+
+function rejectAllPromise(len) {
+    let rejects = Array(len).fill(false)
+
+    return function(index) {
+        rejects[index] = true
+        return rejects.every(r => r)
+    }
+}
+
+function type(obj) {
+    let toString = Object.prototype.toString,
+        typeReg = /\[object\s([A-Z][a-z]*)\]/,
+        matchArr = toString.call(obj).match(typeReg)
+
+    return matchArr ? matchArr[1].toLowerCase() : ''
 }
 
 Q.deferred = Q.defer = function() {
