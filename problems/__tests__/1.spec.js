@@ -12,4 +12,16 @@ describe('two sum', () => {
 
         expect(result).toEqual([0, 3])
     })
+
+    it('case 3', () => {
+        const result = twoSum([2, 5, 5, 11], 10)
+
+        expect(result).toEqual([1, 2])
+    })
+
+    it('case 4', () => {
+        const result = twoSum([3, 2, 4], 6)
+
+        expect(result).toEqual([1, 2])
+    })
 })
