@@ -127,6 +127,7 @@ function resolvePromise(promise2, x, resolve, reject) {
                 resolve(x)
             }
         } catch (e) {
+            // 2.3.3.3.4规范
             if (called) return
             called = true
             reject(e)
