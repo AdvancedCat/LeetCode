@@ -45,6 +45,9 @@
     },
     "jest": {
         "verbose": true,
+        "testMatch": [
+            "**/?(*.)+(spec|test).[jt]s?(x)"
+        ],
         "transform": {
             "^.+\\.(ts|tsx)$": "ts-jest",
             "^.+\\.(js|jsx)$": "babel-jest"

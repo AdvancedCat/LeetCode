@@ -1,6 +1,6 @@
 import twoSum from '../1.two-sum'
 
-describe('two sum', () => {
+describe(twoSum.name, () => {
     it('case 1', () => {
         const result = twoSum([2, 7, 11, 15], 9)
 

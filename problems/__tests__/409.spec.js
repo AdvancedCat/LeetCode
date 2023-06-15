@@ -1,6 +1,6 @@
 import fn from '../409.longestPalindrome'
 
-describe('longestPalidrome', () => {
+describe(fn.name, () => {
     it('case 1', () => {
         const result = fn('a')
         expect(result).toEqual(1)
