@@ -3,7 +3,8 @@
  * @return {string}
  */
 var longestCommonPrefix = function(strs) {
-    let cur = 0
+    let common = 0,
+        cur = 0
     const minLength = Math.min(...strs.map(str => str.length))
 
     while (cur < minLength) {
@@ -12,16 +13,18 @@ var longestCommonPrefix = function(strs) {
         for (let i = 1; i < strs.length; i++) {
             if (strs[i][cur] !== char) {
                 isOk = false
+                break
             } else {
                 continue
             }
         }
-        if (isOk) cur++
-        else {
-            cur--
+        if (isOk) {
+            common++
+            cur++
+        } else {
             break
         }
     }
 
-    return cur > -1 ? strs[0].slice(0, cur + 1) : ''
+    return common > 0 ? strs[0].slice(0, common) : ''
 }
