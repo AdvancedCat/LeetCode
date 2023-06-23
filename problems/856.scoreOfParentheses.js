@@ -20,6 +20,8 @@ var scoreOfParentheses = function(s) {
             root = root.parent
         }
     }
+
+    return calcScore(rootNode)
 }
 
 class Node {
